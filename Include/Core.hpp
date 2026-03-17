@@ -16,6 +16,7 @@ private:
     DLLoader<IGame> _gameLoader;
     Input_s _input;
     bool _open;
+    bool _CheckInputs();
 public:
     Core(const char* graphics_path);
 

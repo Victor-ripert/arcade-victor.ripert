@@ -5,6 +5,8 @@ enum class Command {
     Down,
     Left,
     Right,
+    Quit,
+    Esc
 };
 
 typedef struct Input_t
