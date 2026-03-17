@@ -17,7 +17,7 @@ typedef struct Input_t
 class IGraphics
 {
 private:
-    /* data */
+
 public:
     virtual Input_s getInput() = 0;
     virtual void clear();
