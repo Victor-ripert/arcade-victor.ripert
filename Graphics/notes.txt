@@ -1,0 +1,1 @@
+!!!! the graphic classes need a map <std::string sprite, "there own thing to draw, char or texture">
