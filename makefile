@@ -12,7 +12,7 @@ BAR_OBJ     = $(BAR_SRC:.cpp=.o)
 
 CXX         = g++
 CXXFLAGS    = -Wall -Wextra
-LIB_FLAGS   = -Wall -Wextra -fPIC
+LIB_FLAGS   = -Wall -Wextra -fPIC -fno-gnu-unique
 
 all: $(LIB_FOO) $(LIB_BAR) $(NAME)
 	rm -f $(OBJ) $(FOO_OBJ) $(BAR_OBJ)
