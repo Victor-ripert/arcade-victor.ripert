@@ -32,7 +32,7 @@ void Core::run() {
             continue;
         }
         _game->updateGame(_input);
-        _game->draw(_graphics.get());
+        _game->render(_graphics.get());
         _graphics->display();
     }
 }
