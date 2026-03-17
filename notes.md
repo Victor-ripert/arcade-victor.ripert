@@ -1,0 +1,101 @@
+```cpp
+#include "polygon.hpp"
+#include <cmath>
+
+class triangle : public polygon {
+public:
+    virtual double area() const {
+        return side_length_ * side_length_ * sqrt(3) / 2;
+    }
+};
+
+
+// the class factories
+
+extern "C" polygon* create() {
+    return new triangle;
+}
+
+extern "C" void destroy(polygon* p) {
+    delete p;
+}
+
+
+#ifndef POLYGON_HPP
+#define POLYGON_HPP
+
+class polygon {
+protected:
+    double side_length_;
+
+public:
+    polygon()
+        : side_length_(0) {}
+
+    virtual ~polygon() {}
+
+    void set_side_length(double side_length) {
+        side_length_ = side_length;
+    }
+
+    virtual double area() const = 0;
+};
+
+// the types of the class factories
+typedef polygon* create_t();
+typedef void destroy_t(polygon*);
+
+#endif
+
+
+#include "polygon.hpp"
+#include <iostream>
+#include <dlfcn.h>
+
+int main() {
+    using std::cout;
+    using std::cerr;
+
+    // load the triangle library
+    void* triangle = dlopen("./triangle.so", RTLD_LAZY);
+    if (!triangle) {
+        cerr << "Cannot load library: " << dlerror() << '\n';
+        return 1;
+    }
+
+    // reset errors
+    dlerror();
+
+    // load the symbols
+    create_t* create_triangle = (create_t*) dlsym(triangle, "create");
+    const char* dlsym_error = dlerror();
+    if (dlsym_error) {
+        cerr << "Cannot load symbol create: " << dlsym_error << '\n';
+        return 1;
+    }
+
+    destroy_t* destroy_triangle = (destroy_t*) dlsym(triangle, "destroy");
+    dlsym_error = dlerror();
+    if (dlsym_error) {
+        cerr << "Cannot load symbol destroy: " << dlsym_error << '\n';
+        return 1;
+    }
+
+    // create an instance of the class
+    polygon* poly = create_triangle();
+
+    // use the class
+    poly->set_side_length(7);
+        cout << "The area is: " << poly->area() << '\n';
+
+    // destroy the class
+    destroy_triangle(poly);
+
+    // unload the triangle library
+    dlclose(triangle);
+}
+```
+
+https://dwheeler.com/program-library/Program-Library-HOWTO/x172.html
+
+https://tldp.org/HOWTO/C++-dlopen/thesolution.html
