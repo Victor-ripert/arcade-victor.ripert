@@ -38,9 +38,9 @@ private:
 
 public:
     virtual Input_s getInput() = 0;
-    virtual void clear();
-    virtual void render();
-    virtual void display();
+    virtual void clear() = 0;
+    virtual void render(Entity &) = 0;
+    virtual void display() = 0;
     virtual ~IGraphics() = default;
 };
 
