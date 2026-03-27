@@ -1,46 +1,21 @@
 #pragma once
 
-enum class Command {
-    Up,
-    Down,
-    Left,
-    Right,
-    Quit,
-    Esc
-};
+#include <string>
+#include <vector>
+#include "Arcade.hpp"
 
-typedef struct Input_t
-{
-    Command cmd;
-    int mouseX;
-    int mouseY;
-} Input_s;
+namespace arcade {
 
-class Entity {
-    private:
-    std::string _sprite;
-    int _x;
-    int _y;
-    bool _visible;
+    class IGraphicLib {
     public:
-    Entity(std::string sprite, int x, int y, bool visible = true) : _sprite(sprite), _x(x), _y(y), _visible(visible) {};
-    int getX(){return _x;};
-    int getY(){return _y;};
-    std::string getSprite(){return _sprite;};
-    bool isVisible() {return _visible;};
-    //need to add sets
-};
-
-
-class IGraphics
-{
-private:
-
-public:
-    virtual Input_s getInput() = 0;
-    virtual void clear() = 0;
-    virtual void render(Entity &) = 0;
-    virtual void display() = 0;
-    virtual ~IGraphics() = default;
-};
+        virtual ~IGraphicLib() = default;
+        virtual void openWindow(const std::string &title, Vector2i size) = 0;
+        virtual void closeWindow() = 0;
+        virtual bool isOpen() const = 0;
+        virtual std::vector<Event> pollEvents() = 0;
+        virtual void clear() = 0;
+        virtual void drawEntity(const Entity &entity) = 0;
+        virtual void display() = 0;
+    };
+}
 
