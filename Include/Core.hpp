@@ -4,6 +4,7 @@
 #include "IGraphics.hpp"
 #include "DLLoader.hpp"
 #include "Arcade.hpp"
+#include "Menu.hpp"
 #include <memory>
 #include <string>
 
@@ -16,7 +17,13 @@ private:
     DLLoader<IGraphicLib> _graphicsLoader;
     DLLoader<IGame> _gameLoader;
     std::vector<Event> _events;
-    bool _open;
+    std::string _game_name;
+    std::string _display_name;
+    void _handleMenuSwitch();
+
+    bool _inMenu = true;
+    Menu _menu;
+    bool _open = true;
     bool _CheckInputs();
 public:
     Core(const char* graphics_path);

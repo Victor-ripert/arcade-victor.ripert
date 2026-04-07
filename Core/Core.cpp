@@ -14,7 +14,7 @@ namespace arcade {
             switch (event.key)
             {
             case Key::BackToMenu:
-                //swap menu
+                _inMenu = true;
                 break;
             case Key::Quit:
                 _open = false;
@@ -26,15 +26,41 @@ namespace arcade {
         return false;
     }
 
+
+    void Core::_handleMenuSwitch() {
+        if (!_menu.switchReq())
+            return;
+
+        _gameLoader.load(_menu.getNextGame().c_str());
+        _game = _gameLoader.getInstance("gameEntryPoint");
+
+        _graphicsLoader.load(_menu.getNextGraphic().c_str());
+        _graphics = _graphicsLoader.getInstance("displayEntryPoint");
+
+        _menu.switchOff();
+        _inMenu = false;
+    }
+
     void Core::run() {
-        double deltaTime;
+        double deltaTime = 0;
         while (_open) {
             _events = _graphics->pollEvents();
             _graphics->clear();
-            if (_CheckInputs()) {
+            if (_CheckInputs())
                 continue;
+
+            if (_inMenu) {
+                _menu.update(deltaTime, _events);
+                _handleMenuSwitch();
+                for (auto &ent : _menu.getEntities())
+                    _graphics->drawEntity(ent);
+            } else {
+                _game->update(deltaTime, _events);
+                if (_game->isOver())
+                    _inMenu = true;
+                for (auto &ent : _game->getEntities())
+                    _graphics->drawEntity(ent);
             }
-            _game->update(deltaTime, _events);
             _graphics->display();
         }
     }

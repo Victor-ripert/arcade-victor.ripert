@@ -5,7 +5,6 @@
 #include <vector>
 
 namespace arcade {
-
     enum class Key {
         Unknown = 0,
         Up, Down, Left, Right,

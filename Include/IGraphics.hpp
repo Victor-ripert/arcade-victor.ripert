@@ -5,7 +5,6 @@
 #include "Arcade.hpp"
 
 namespace arcade {
-
     class IGraphicLib {
     public:
         virtual ~IGraphicLib() = default;
