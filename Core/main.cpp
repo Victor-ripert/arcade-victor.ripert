@@ -2,6 +2,7 @@
 
 int main(int argc, char **argv) {
 
-    Core core(argv[1]);
+    arcade::Core core(argv[1]);
     core.run();
+    return 0;
 }

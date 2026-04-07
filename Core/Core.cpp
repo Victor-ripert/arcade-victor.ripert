@@ -3,36 +3,39 @@
 #include "../Include/IGraphics.hpp"
 #include "../Include/DLLoader.hpp"
 
+namespace arcade {
 
-Core::Core(const char *path): _open(true) {
-    _graphicsLoader.load(path);
-}
-
-bool Core::_CheckInputs() {
-    switch (_input.cmd)
-    {
-    case Command::Esc:
-        //swap menu
-        break;
-    case Command::Quit:
-        _open = false;
-        return true;
-    default:
-        break;
+    Core::Core(const char *path): _open(true) {
+        _graphicsLoader.load(path);
     }
-    return false;
-}
 
-void Core::run() {
-    while (_open) {
-        _input = _graphics->getInput();
-        _graphics->clear();
-        //func to check input for quit, or swap game
-        if (_CheckInputs()) {
-            continue;
+    bool Core::_CheckInputs() {
+        for (auto &event : _events) {
+            switch (event.key)
+            {
+            case Key::BackToMenu:
+                //swap menu
+                break;
+            case Key::Quit:
+                _open = false;
+                return true;
+            default:
+                break;
+            }
         }
-        _game->updateGame(_input);
-        _game->render(_graphics.get());
-        _graphics->display();
+        return false;
+    }
+
+    void Core::run() {
+        double deltaTime;
+        while (_open) {
+            _events = _graphics->pollEvents();
+            _graphics->clear();
+            if (_CheckInputs()) {
+                continue;
+            }
+            _game->update(deltaTime, _events);
+            _graphics->display();
+        }
     }
 }
