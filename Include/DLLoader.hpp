@@ -21,7 +21,7 @@ public:
             throw std::runtime_error(dlerror());
     }
 
-    std::unique_ptr<T> getInstance(const std::string &sym = "entryPoint") {
+    std::unique_ptr<T> getInstance(const std::string &sym = "displayEntryPoint") {
         if (!_handler)
             throw std::runtime_error("No library loaded");
         void *s = dlsym(_handler, sym.c_str());
@@ -32,7 +32,8 @@ public:
     }
 
     bool hasSymbol(const std::string &sym) {
-        if (!_handler) return false;
+        if (!_handler)
+            return false;
         return dlsym(_handler, sym.c_str()) != nullptr;
     }
 

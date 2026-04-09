@@ -1,44 +1,62 @@
-NAME        = main
-LIB_FOO     = libfoo.so
-LIB_BAR     = libbar.so
-
-SRC         = main.cpp
-FOO_SRC     = foo.cpp
-BAR_SRC     = bar.cpp
-
-OBJ         = $(SRC:.cpp=.o)
-FOO_OBJ     = $(FOO_SRC:.cpp=.o)
-BAR_OBJ     = $(BAR_SRC:.cpp=.o)
+NAME        = arcade
 
 CXX         = g++
-CXXFLAGS    = -Wall -Wextra
-LIB_FLAGS   = -Wall -Wextra -fPIC -fno-gnu-unique
+CXXFLAGS    = -std=c++17 -g -Wall -Wextra -fPIC
+INCLUDES    = -IInclude
 
-all: $(LIB_FOO) $(LIB_BAR) $(NAME)
-	rm -f $(OBJ) $(FOO_OBJ) $(BAR_OBJ)
+# --- Core ---
+CORE_SRC    = Core/main.cpp Core/Core.cpp Core/Menu.cpp
+CORE_OBJ    = $(CORE_SRC:.cpp=.o)
 
-$(LIB_FOO): $(FOO_OBJ)
-	$(CXX) -shared -o $(LIB_FOO) $(FOO_OBJ)
+# --- Graphics libs ---
+GRAPH_LIBS  = lib/sfml.so \
+              lib/ncurses.so \
+              lib/sdl.so
 
-$(LIB_BAR): $(BAR_OBJ)
-	$(CXX) -shared -o $(LIB_BAR) $(BAR_OBJ)
+# --- Game libs ---
+GAME_LIBS   = lib/snake.so \
+              lib/nibbler.so
 
-$(FOO_OBJ): $(FOO_SRC)
-	$(CXX) $(LIB_FLAGS) -c $< -o $@
+# ------------------------------------------------
 
-$(BAR_OBJ): $(BAR_SRC)
-	$(CXX) $(LIB_FLAGS) -c $< -o $@
+all: core graphicals games
 
-$(NAME): $(LIB_FOO) $(LIB_BAR) $(OBJ)
-	$(CXX) $(CXXFLAGS) -o $(NAME) $(OBJ) -ldl
+core: $(NAME)
 
+$(NAME): $(CORE_OBJ)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ $^ -ldl
+
+graphicals: $(GRAPH_LIBS)
+
+lib/sfml.so: Graphics/SFML.cpp
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -shared -o $@ $^ -lsfml-graphics -lsfml-window -lsfml-system
+
+lib/ncurses.so: Graphics/NCurses.cpp
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -shared -o $@ $^ -lncurses
+
+lib/sdl.so: Graphics/SDL.cpp
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -shared -o $@ $^ -lSDL2
+
+games: $(GAME_LIBS)
+
+lib/snake.so: Games/Snake/Snake.cpp
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -shared -o $@ $^
+
+lib/nibbler.so: Games/Nibbler/Nibbler.cpp
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -shared -o $@ $^
+
+# --- Generic object rule ---
 %.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+
+# ------------------------------------------------
 
 clean:
-	rm -f $(OBJ) $(FOO_OBJ) $(BAR_OBJ)
+	rm -f $(CORE_OBJ)
 
 fclean: clean
-	rm -f $(NAME) $(LIB_FOO) $(LIB_BAR)
+	rm -f $(NAME) $(GRAPH_LIBS) $(GAME_LIBS)
 
 re: fclean all
+
+.PHONY: all core graphicals games clean fclean re

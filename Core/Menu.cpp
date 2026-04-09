@@ -16,7 +16,7 @@ namespace arcade {
         new_entity.color = WHITE;
         new_entity.text = text;
         new_entity.position = {1, y};
-        new_entity.size = {1, 5};
+        new_entity.size = {18, 1};
         new_entity.type = EntityType::Text;
         return new_entity;
     }
@@ -26,8 +26,8 @@ namespace arcade {
         new_entity.color = BLACK;
         new_entity.text = "background";
         new_entity.position = {1, y};
-        new_entity.size = {1, 5};
-        new_entity.type = EntityType::Text;
+        new_entity.size = {18, 1};
+        new_entity.type = EntityType::Rectangle;
         return new_entity;
     }
 
@@ -62,7 +62,10 @@ namespace arcade {
     }
 
     void Menu::update(double deltaTime, const std::vector<Event> &events) {
+        (void) deltaTime;
         for (const auto &event : events) {
+            if (event.type != EventType::KeyPressed)
+                continue;
             switch (event.key)
             {
             case  Key::Confirm:
@@ -70,17 +73,18 @@ namespace arcade {
                 if (_section == 2)
                     _switchRequested = true;
                 break;
-            case  Key::Up:
-                if (_section == 0)
-                    _game_idx = (_game_idx + 1) % _games.size();
-                if (_section == 1)
-                    _display_idx = (_display_idx + 1) % _displays.size();
+            case Key::Up:
+                if (_section == 0 && !_games.empty())
+                    _game_idx = (_game_idx + 1) % (int)_games.size();
+                if (_section == 1 && !_displays.empty())
+                    _display_idx = (_display_idx + 1) % (int)_displays.size();
                 break;
-            case  Key::Down:
-                if (_section == 0)
-                    _game_idx = (_game_idx - 1 + _games.size()) % _games.size();
-                if (_section == 1)
-                    _display_idx = (_display_idx - 1 + _displays.size()) % _displays.size();
+            case Key::Down:
+                if (_section == 0 && !_games.empty())
+                    _game_idx = (_game_idx - 1 + (int)_games.size()) % (int)_games.size();
+                if (_section == 1 && !_displays.empty())
+                    _display_idx = (_display_idx - 1 + (int)_displays.size()) % (int)_displays.size();
+                break;
                 break;
             default:
                 break;
@@ -90,7 +94,7 @@ namespace arcade {
     };
 
     Menu::Menu() {
-        std::filesystem::path lib_path = "../lib";
+        std::filesystem::path lib_path = "./lib";
         for (const auto& entry : std::filesystem::directory_iterator(lib_path)) {
             if (entry.path().extension() != ".so")
                 continue;
@@ -108,14 +112,14 @@ namespace arcade {
         }
         _entities_game.push_back(makeText("Games", 0));
         int heading_offset = 1;
-        for (int i = 0; i < _games.size(); i ++) {
+        for (size_t i = 0; i < _games.size(); i ++) {
             _entities_game.push_back(makeBG(i + heading_offset));
             _entities_game.push_back(makeText(_games[i], i + heading_offset));
         }
 
         _entities_display.push_back(makeText("Displays", 0));
         heading_offset = 1;
-        for (int i = 0; i < (int)_displays.size(); i++) {
+        for (size_t i = 0; i < _displays.size(); i++) {
             _entities_display.push_back(makeBG(i + heading_offset));
             _entities_display.push_back(makeText(_displays[i], i + heading_offset));
         }
@@ -125,6 +129,15 @@ namespace arcade {
 
     Menu::~Menu() {
 
+    };
+
+    std::string Menu::getNextGame() {
+        if (_games.empty()) return "";
+        return _games[_game_idx];
+    };
+    std::string Menu::getNextGraphic() {
+        if (_displays.empty()) return "";
+        return _displays[_display_idx];
     };
 };
 

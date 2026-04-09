@@ -5,8 +5,10 @@
 
 namespace arcade {
 
-    Core::Core(const char *path): _open(true) {
+    Core::Core(const char *path) : _game(nullptr), _graphics(nullptr) {
         _graphicsLoader.load(path);
+        _graphics = _graphicsLoader.getInstance("displayEntryPoint");
+        _graphics->openWindow("Arcade", {20, 25});
     }
 
     bool Core::_CheckInputs() {
@@ -31,12 +33,25 @@ namespace arcade {
         if (!_menu.switchReq())
             return;
 
-        _gameLoader.load(_menu.getNextGame().c_str());
+        std::string nextGame    = _menu.getNextGame();
+        std::string nextGraphic = _menu.getNextGraphic();
+
+        if (nextGame.empty() || nextGraphic.empty()) {
+            _menu.switchOff();
+            return;
+        }
+
+        if (_graphics)
+        _graphics->closeWindow();
+        _game.reset();
+        _graphics.reset();
+
+        _gameLoader.load(nextGame.c_str());
         _game = _gameLoader.getInstance("gameEntryPoint");
 
-        _graphicsLoader.load(_menu.getNextGraphic().c_str());
+        _graphicsLoader.load(nextGraphic.c_str());
         _graphics = _graphicsLoader.getInstance("displayEntryPoint");
-
+        _graphics->openWindow(_game->getName(), Vector2i{20, 25});
         _menu.switchOff();
         _inMenu = false;
     }
@@ -63,5 +78,12 @@ namespace arcade {
             }
             _graphics->display();
         }
+    }
+
+    Core::~Core() {
+        if (_graphics)
+            _graphics->closeWindow();
+        _game.reset();
+        _graphics.reset();
     }
 }

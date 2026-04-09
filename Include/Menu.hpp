@@ -44,8 +44,8 @@ namespace arcade {
             void update(double deltaTime, const std::vector<Event> &events);
             bool switchReq() {return _switchRequested;};
             void switchOff() {_switchRequested = false;};
-            std::string getNextGame() {return _games[_game_idx];};
-            std::string getNextGraphic() {return _displays[_display_idx];};
+            std::string getNextGame();
+            std::string getNextGraphic();
             Menu();
             ~Menu();
     };
