@@ -15,8 +15,8 @@ namespace arcade {
         Entity new_entity;
         new_entity.color = WHITE;
         new_entity.text = text;
-        new_entity.position = {1, y};
-        new_entity.size = {18, 1};
+        new_entity.position = {0, y};
+        new_entity.size = {1, 1};
         new_entity.type = EntityType::Text;
         return new_entity;
     }
@@ -25,8 +25,8 @@ namespace arcade {
         Entity new_entity;
         new_entity.color = BLACK;
         new_entity.text = "background";
-        new_entity.position = {1, y};
-        new_entity.size = {18, 1};
+        new_entity.position = {0, y};
+        new_entity.size = {16, 1};
         new_entity.type = EntityType::Rectangle;
         return new_entity;
     }
@@ -75,16 +75,15 @@ namespace arcade {
                 break;
             case Key::Up:
                 if (_section == 0 && !_games.empty())
-                    _game_idx = (_game_idx + 1) % (int)_games.size();
-                if (_section == 1 && !_displays.empty())
-                    _display_idx = (_display_idx + 1) % (int)_displays.size();
-                break;
-            case Key::Down:
-                if (_section == 0 && !_games.empty())
                     _game_idx = (_game_idx - 1 + (int)_games.size()) % (int)_games.size();
                 if (_section == 1 && !_displays.empty())
                     _display_idx = (_display_idx - 1 + (int)_displays.size()) % (int)_displays.size();
                 break;
+            case Key::Down:
+                if (_section == 0 && !_games.empty())
+                    _game_idx = (_game_idx + 1) % (int)_games.size();
+                if (_section == 1 && !_displays.empty())
+                    _display_idx = (_display_idx + 1) % (int)_displays.size();
                 break;
             default:
                 break;

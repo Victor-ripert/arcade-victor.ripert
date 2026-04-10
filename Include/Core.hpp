@@ -19,6 +19,8 @@ private:
     std::vector<Event> _events;
     std::string _game_name;
     std::string _display_name;
+    std::string username;
+    int score = 0;
     void _handleMenuSwitch();
 
     bool _inMenu = true;

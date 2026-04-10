@@ -8,7 +8,7 @@ namespace arcade {
     Core::Core(const char *path) : _game(nullptr), _graphics(nullptr) {
         _graphicsLoader.load(path);
         _graphics = _graphicsLoader.getInstance("displayEntryPoint");
-        _graphics->openWindow("Arcade", {20, 25});
+        _graphics->openWindow("Arcade", {16, 12});
     }
 
     bool Core::_CheckInputs() {

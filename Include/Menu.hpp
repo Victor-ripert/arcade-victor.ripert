@@ -34,6 +34,7 @@ namespace arcade {
             bool _switchRequested = false;
             int _game_idx = 0;
             int _display_idx = 0;
+            std::string userName;
             std::string _nextGame;
             std::string _nextGraphic;
             Entity makeText(const std::string &text, int y);

@@ -27,7 +27,7 @@
 namespace arcade
 {
     SFML::SFML(/* args */) {
-        _font.loadFromFile("Graphics/ARCADE_I.TTF");
+        _font.loadFromFile("Graphics/assets/ARCADE_I.TTF");
     }
     bool SFML::isOpen() const {
         return _window.isOpen();
@@ -40,6 +40,10 @@ namespace arcade
             static_cast<float>(w * _scale),
             static_cast<float>(h * _scale)
         );
+    }
+
+    sf::Vector2i SFML::_makeSizeInt(int w, int h) {
+        return sf::Vector2i((w * _scale), (h * _scale));
     }
 
     void SFML::openWindow(const std::string &title, Vector2i size) {
@@ -100,6 +104,47 @@ namespace arcade
         rectangle.setPosition(_makeSize(entity.position.x, entity.position.y));
         _window.draw(rectangle);
     }
+
+
+    sf::Texture &SFML::_getTexture(const std::string &path)
+    {
+        auto it = _textures.find(path);
+        if (it == _textures.end()) {
+            sf::Texture texture;
+            if (!texture.loadFromFile(path)) {
+                _textures[path] = sf::Texture();
+            } else {
+                texture.setSmooth(true);
+                _textures[path] = std::move(texture);
+            }
+        }
+        return _textures[path];
+    }
+
+    void SFML::drawSprite(const Entity &entity)
+    {
+        sf::Texture &texture = _getTexture(entity.spriteId);
+
+        sf::Sprite sprite(texture);
+
+        sprite.setTextureRect(sf::IntRect(
+            {0, 0},
+            {static_cast<int>(texture.getSize().x),
+            static_cast<int>(texture.getSize().y)}
+        ));
+
+        sf::Vector2f texSize(texture.getSize());
+        sprite.setScale({
+            (entity.size.x * _scale) / texSize.x,
+            (entity.size.y * _scale) / texSize.y
+        });
+
+        sprite.setPosition(_makeSize(entity.position.x, entity.position.y));
+        sprite.setColor(sf::Color( entity.color.r, entity.color.g, entity.color.b, entity.color.a));
+
+        _window.draw(sprite);
+    }
+
     void SFML::drawText(const Entity &entity) {
         sf::Text text;
         text.setFont(_font);
@@ -111,8 +156,8 @@ namespace arcade
             entity.color.a
         ));
 
-        int pixelH = entity.size.y * _scale;
-        text.setCharacterSize(std::max(1, pixelH));
+        float pixelH = entity.size.y * _scale * 0.7;
+        text.setCharacterSize(pixelH);
         text.setPosition(
             static_cast<float>(entity.position.x * _scale),
             static_cast<float>(entity.position.y * _scale)
@@ -130,7 +175,7 @@ namespace arcade
             drawText(entity);
             break;
         case EntityType::Sprite:
-            /* code */
+            drawSprite(entity);
             break;
         default:
             break;
