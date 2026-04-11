@@ -16,7 +16,7 @@ graphicals:
 
 # --- Games ---
 games:
-
+	$(CXX) $(FLAGS) -shared Games/Nibbler/Nibbler.cpp -o lib/arcade_nibbler.so
 # --- Generic object rule ---
 %.o: %.cpp
 	$(CXX) $(FLAGS) -c $< -o $@
