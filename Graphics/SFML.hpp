@@ -13,7 +13,7 @@ namespace arcade {
     private:
         sf::RenderWindow _window;
         sf::Font _font;
-        int _scale = 50;
+        int _scale = 30;
         sf::Vector2f _makeSize(int w, int h);
         sf::Vector2i _makeSizeInt(int w, int h);
         void drawRectangle(const Entity &entity);

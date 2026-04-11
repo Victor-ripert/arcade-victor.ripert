@@ -8,7 +8,7 @@ namespace arcade {
     Core::Core(const char *path) : _game(nullptr), _graphics(nullptr) {
         _graphicsLoader.load(path);
         _graphics = _graphicsLoader.getInstance("displayEntryPoint");
-        _graphics->openWindow("Arcade", {16, 12});
+        _graphics->openWindow("Arcade", {32, 32});
     }
 
     bool Core::_CheckInputs() {
@@ -33,32 +33,37 @@ namespace arcade {
         if (!_menu.switchReq())
             return;
 
-        std::string nextGame    = _menu.getNextGame();
+        std::string nextGame = _menu.getNextGame();
         std::string nextGraphic = _menu.getNextGraphic();
-
-        if (nextGame.empty() || nextGraphic.empty()) {
-            _menu.switchOff();
-            return;
-        }
-
         if (_graphics)
-        _graphics->closeWindow();
+            _graphics->closeWindow();
         _game.reset();
         _graphics.reset();
 
-        _gameLoader.load(nextGame.c_str());
-        _game = _gameLoader.getInstance("gameEntryPoint");
-
-        _graphicsLoader.load(nextGraphic.c_str());
-        _graphics = _graphicsLoader.getInstance("displayEntryPoint");
-        _graphics->openWindow(_game->getName(), Vector2i{20, 25});
+        if (!nextGame.empty()) {
+            _gameLoader.load(nextGame.c_str());
+            _game = _gameLoader.getInstance("gameEntryPoint");
+        }
+        if (!nextGraphic.empty()) {
+            _graphicsLoader.load(nextGraphic.c_str());
+            _graphics = _graphicsLoader.getInstance("displayEntryPoint");
+        }
+        if (!_graphics || !_game) {
+            _menu.switchOff();
+            if (_graphics)
+                _graphics->openWindow("Arcade", Vector2i{32, 32});
+            return;
+        }
+        _graphics->openWindow(_game->getName(), Vector2i{32, 32});
         _menu.switchOff();
         _inMenu = false;
     }
 
     void Core::run() {
-        double deltaTime = 0;
         while (_open) {
+            auto now = std::chrono::steady_clock::now();
+            double deltaTime = std::chrono::duration<double>(now - _lastTime).count();
+            _lastTime = now;
             _events = _graphics->pollEvents();
             _graphics->clear();
             if (_CheckInputs())

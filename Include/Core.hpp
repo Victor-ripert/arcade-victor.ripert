@@ -7,6 +7,7 @@
 #include "Menu.hpp"
 #include <memory>
 #include <string>
+#include <chrono>
 
 
 namespace arcade {
@@ -22,6 +23,7 @@ private:
     std::string username;
     int score = 0;
     void _handleMenuSwitch();
+    std::chrono::steady_clock::time_point _lastTime;
 
     bool _inMenu = true;
     Menu _menu;
