@@ -18,21 +18,32 @@ namespace arcade {
         Wall,
         Body,
         Head,
-        Food
+        Food,
+        Unkown
     };
-    struct Pos {
-        int x;
-        int y;
-    };
+
     class Nibbler : public IGame
     {
     private:
         std::vector<std::vector<CellType>> _map;
-        std::deque<Pos> _snake;
-        void moveSnake(Event &Event);
+        Vector2i _dir = {1, 0};
+        Vector2i _dir_wanted = {1, 0};
+        std::deque<Vector2i> _snake;
+        CellType moveType(const int &y, const int &x);
+        bool openCell(const int &y, const int &x);
+        void updateSnake();
         void loadmap();
+        void moveSnake(int newX, int newY);
+        void feedSnake(int newX, int newY);
+        CellType getType(char &c);
+        void nextLevel();
+        int _food = 0;
         int _lvl = 0;
-        int _score;
+        float _move_timer = 0;
+        float _move_at = 0.2;
+        int _score = 0;
+        bool _end_game = false;
+        bool _next_lvl = false;
         int _max_x = 30;
         int _max_y = 30;
     public:
