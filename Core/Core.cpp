@@ -21,6 +21,8 @@ namespace arcade {
             case Key::Quit:
                 _open = false;
                 return true;
+            case Key::RestartGame:
+                _game->reset();
             default:
                 break;
             }

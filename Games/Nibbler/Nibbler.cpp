@@ -51,8 +51,12 @@ namespace arcade {
 
     void Nibbler::reset() {
         _lvl = 0;
+        _score = 0;
         _end_game = false;
         _next_lvl = false;
+        _start = true;
+        _dir = {-1, 0};
+        _dir_wanted = {-1, 0};
         loadmap();
     }
 
@@ -187,6 +191,8 @@ namespace arcade {
             if (event.key == Key::Confirm) {
                 _end_game = false;
                 _start = true;
+                _dir = {-1, 0};
+                _dir_wanted = {-1, 0};
                 _score = 0;
                 _lvl = 0;
             }
