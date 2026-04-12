@@ -23,6 +23,19 @@ namespace arcade {
                 return true;
             case Key::RestartGame:
                 _game->reset();
+                break;
+            case Key::NextGame:
+                _menu.nextGame();
+                break;
+            case Key::PrevGame:
+                _menu.prevGame();
+                break;
+            case Key::NextGraphics:
+                _menu.nextGraphic();
+                break;
+            case Key::PrevGraphics:
+                _menu.prevGraphic();
+                break;
             default:
                 break;
             }
@@ -69,7 +82,7 @@ namespace arcade {
             _graphics->clear();
             if (_CheckInputs())
                 continue;
-
+            _handleMenuSwitch();
             if (_inMenu) {
                 _menu.update(deltaTime, _events);
                 _handleMenuSwitch();

@@ -52,6 +52,14 @@ namespace arcade {
     SDL2::~SDL2()
     {
         closeWindow();
+        if (_ttfInitialized) {
+            TTF_Quit();
+            _ttfInitialized = false;
+        }
+        if (_initialized) {
+            SDL_Quit();
+            _initialized = false;
+        }
     }
 
     void SDL2::openWindow(const std::string &title, Vector2i size)
@@ -126,25 +134,17 @@ namespace arcade {
 
     void SDL2::closeWindow()
     {
-        if (_font != nullptr) {
+        if (_font) {
             TTF_CloseFont(_font);
             _font = nullptr;
         }
-        if (_renderer != nullptr) {
+        if (_renderer) {
             SDL_DestroyRenderer(_renderer);
             _renderer = nullptr;
         }
-        if (_window != nullptr) {
+        if (_window) {
             SDL_DestroyWindow(_window);
             _window = nullptr;
-        }
-        if (_initialized) {
-            SDL_Quit();
-            _initialized = false;
-        }
-        if (_ttfInitialized) {
-            TTF_Quit();
-            _ttfInitialized = false;
         }
     }
 

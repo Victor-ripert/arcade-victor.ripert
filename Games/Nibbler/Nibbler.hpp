@@ -61,7 +61,7 @@ namespace arcade {
         float _move_timer = 0;
         float _move_at = 0.2;
         int _score = 0;
-        bool _start    = true;
+        bool _start = true;
         bool _end_game = false;
         bool _next_lvl = false;
         int _max_x = 30;

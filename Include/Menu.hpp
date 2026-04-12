@@ -48,6 +48,10 @@ namespace arcade {
             std::string getNextGame();
             std::string getNextGraphic();
             void setSection(int x) {_section = x;};
+            void nextGame();
+            void nextGraphic();
+            void prevGame();
+            void prevGraphic();
             Menu();
             ~Menu();
     };

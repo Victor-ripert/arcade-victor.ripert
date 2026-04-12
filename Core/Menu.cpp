@@ -138,4 +138,24 @@ std::string Menu::getNextGraphic() {
     return _displays[_display_idx];
 };
 
+void Menu::nextGame() {
+    _game_idx = (_game_idx + 1) % (int)_games.size();
+    _switchRequested = true;
+}
+
+void Menu::prevGame() {
+    _game_idx = (_game_idx - 1 + (int)_games.size()) % (int)_games.size();
+    _switchRequested = true;
+}
+
+void Menu::nextGraphic() {
+    _display_idx = (_display_idx + 1) % (int)_displays.size();
+    _switchRequested = true;
+}
+
+void Menu::prevGraphic() {
+    _display_idx = (_display_idx - 1 + (int)_displays.size()) % (int)_displays.size();
+    _switchRequested = true;
+}
+
 }; // namespace arcade
