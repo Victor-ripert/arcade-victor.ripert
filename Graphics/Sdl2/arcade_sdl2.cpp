@@ -18,8 +18,7 @@ namespace {
             case SDLK_LEFT: return arcade::Key::Left;
             case SDLK_RIGHT: return arcade::Key::Right;
             case SDLK_RETURN:
-            case SDLK_KP_ENTER:
-                return arcade::Key::Confirm;
+            case SDLK_KP_ENTER: return arcade::Key::Confirm;
             case SDLK_ESCAPE: return arcade::Key::Cancel;
             case SDLK_TAB: return arcade::Key::NextGraphics;
             case SDLK_BACKSPACE: return arcade::Key::PrevGraphics;
@@ -199,7 +198,7 @@ namespace arcade {
             return;
         }
 
-        const int pixelHeight = std::max(8, static_cast<int>(entity.size.y * _scale * 0.7f));
+        const int pixelHeight = static_cast<int>(entity.size.y * _scale * 0.7f);
         TTF_SetFontSize(_font, pixelHeight);
 
         SDL_Color color {
@@ -254,7 +253,7 @@ namespace arcade {
     }
 }
 
-extern "C" arcade::IGraphicLib *displayEntryPoint()
+extern "C" arcade::IGraphicLib *createDisplay()
 {
     return new arcade::SDL2();
 }

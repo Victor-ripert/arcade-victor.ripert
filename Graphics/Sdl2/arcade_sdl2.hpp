@@ -8,6 +8,7 @@
 #ifndef ARACADE_SDL2_HPP
     #define ARACADE_SDL2_HPP
 
+
     #include <SDL2/SDL.h>
     #include <SDL2/SDL_ttf.h>
     #include "IGraphics.hpp"
@@ -22,7 +23,7 @@ namespace arcade {
         TTF_Font *_font = nullptr;
         bool _initialized = false;
         bool _ttfInitialized = false;
-        int _scale = 32;
+        int _scale = 30;
 
         SDL_Rect _makeRect(const Entity &entity) const;
     void drawRectangle(const Entity &entity);
@@ -43,7 +44,7 @@ namespace arcade {
 }
 
 extern "C" {
-    arcade::IGraphicLib *displayEntryPoint();
+    arcade::IGraphicLib *createDisplay();
 }
 
 #endif /* ARACADE_SDL2_HPP */

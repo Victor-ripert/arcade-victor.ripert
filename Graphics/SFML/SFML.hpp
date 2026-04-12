@@ -35,7 +35,7 @@ namespace arcade {
 }
 
 extern "C" {
-    arcade::IGraphicLib *displayEntryPoint() {
+    arcade::IGraphicLib *createDisplay() {
         return new arcade::SFML();
     };
 }

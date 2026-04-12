@@ -17,7 +17,7 @@ namespace arcade {
     }
 
     void Nibbler::loadmap() {
-        std::string path = "./Games/Nibbler/assets/level_" + std::to_string(_lvl) + ".lvl";
+        std::string path = "./assets/Nibbler/level_" + std::to_string(_lvl) + ".lvl";
         std::fstream level(path);
         if (!level) {
             std::cout << "cant find level" << std::endl;
@@ -76,6 +76,7 @@ namespace arcade {
         {
         case CellType::Nothing: return true;
         case CellType::Food : return true;
+        case CellType::Body : return true;
         default:
             return false;
         }

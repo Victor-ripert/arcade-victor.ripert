@@ -21,7 +21,7 @@ public:
             throw std::runtime_error(dlerror());
     }
 
-    std::unique_ptr<T> getInstance(const std::string &sym = "displayEntryPoint") {
+    std::unique_ptr<T> getInstance(const std::string &sym = "createDisplay") {
         if (!_handler)
             throw std::runtime_error("No library loaded");
         void *s = dlsym(_handler, sym.c_str());

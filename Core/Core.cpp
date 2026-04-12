@@ -7,7 +7,7 @@ namespace arcade {
 
     Core::Core(const char *path) : _game(nullptr), _graphics(nullptr) {
         _graphicsLoader.load(path);
-        _graphics = _graphicsLoader.getInstance("displayEntryPoint");
+        _graphics = _graphicsLoader.getInstance("createDisplay");
         _graphics->openWindow("Arcade", {32, 32});
     }
 
@@ -32,21 +32,20 @@ namespace arcade {
     void Core::_handleMenuSwitch() {
         if (!_menu.switchReq())
             return;
-
         std::string nextGame = _menu.getNextGame();
         std::string nextGraphic = _menu.getNextGraphic();
         if (_graphics)
             _graphics->closeWindow();
         _game.reset();
         _graphics.reset();
-
+        _menu.setSection(0);
         if (!nextGame.empty()) {
             _gameLoader.load(nextGame.c_str());
-            _game = _gameLoader.getInstance("gameEntryPoint");
+            _game = _gameLoader.getInstance("createGame");
         }
         if (!nextGraphic.empty()) {
             _graphicsLoader.load(nextGraphic.c_str());
-            _graphics = _graphicsLoader.getInstance("displayEntryPoint");
+            _graphics = _graphicsLoader.getInstance("createDisplay");
         }
         if (!_graphics || !_game) {
             _menu.switchOff();
@@ -76,6 +75,7 @@ namespace arcade {
                     _graphics->drawEntity(ent);
             } else {
                 _game->update(deltaTime, _events);
+                std::cout << _game->isOver() << std::endl;
                 if (_game->isOver())
                     _inMenu = true;
                 for (auto &ent : _game->getEntities())

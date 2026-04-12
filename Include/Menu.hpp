@@ -47,6 +47,7 @@ namespace arcade {
             void switchOff() {_switchRequested = false;};
             std::string getNextGame();
             std::string getNextGraphic();
+            void setSection(int x) {_section = x;};
             Menu();
             ~Menu();
     };

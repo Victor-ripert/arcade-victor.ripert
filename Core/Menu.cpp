@@ -71,8 +71,9 @@ void Menu::update(double deltaTime, const std::vector<Event> &events) {
         switch (event.key) {
             case Key::Confirm:
                 _section = (_section + 1) % 3;
-                if (_section == 2)
+                if (_section == 2) {
                     _switchRequested = true;
+                }
                 break;
             case Key::Up:
                 if (_section == 0 && !_games.empty())
@@ -103,9 +104,9 @@ Menu::Menu() {
         void *handle = dlopen(path.c_str(), RTLD_LAZY);
         if (!handle)
             continue;
-        if (dlsym(handle, "gameEntryPoint"))
+        if (dlsym(handle, "createGame"))
             _games.push_back(path);
-        else if (dlsym(handle, "displayEntryPoint"))
+        else if (dlsym(handle, "createDisplay"))
             _displays.push_back(path);
         dlclose(handle);
     }

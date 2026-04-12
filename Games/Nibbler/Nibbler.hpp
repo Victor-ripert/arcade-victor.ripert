@@ -80,7 +80,7 @@ namespace arcade {
 
 }
 extern "C" {
-    arcade::IGame *gameEntryPoint() {
+    arcade::IGame *createGame() {
         return new arcade::Nibbler();
     };
 }
