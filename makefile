@@ -13,6 +13,7 @@ core: $(CORE_OBJ)
 # --- Graphics ---
 graphicals:
 	$(CXX) $(FLAGS) -shared Graphics/SFML.cpp    -o lib/arcade_sfml.so    -lsfml-graphics -lsfml-window -lsfml-system
+	$(CXX) $(FLAGS) -shared Graphics/arcade_sdl2.cpp -o lib/arcade_sdl2.so -lSDL2 -lSDL2_ttf
 
 # --- Games ---
 games:
@@ -26,7 +27,7 @@ clean:
 	rm -f $(CORE_OBJ)
 
 fclean: clean
-	rm -f $(NAME) lib/sfml.so lib/ncurses.so lib/sdl.so lib/snake.so lib/nibbler.so
+	rm -f $(NAME) lib/arcade_sfml.so lib/arcade_sdl2.so lib/arcade_nibbler.so
 
 re: fclean all
 
