@@ -75,7 +75,6 @@ namespace arcade {
                     _graphics->drawEntity(ent);
             } else {
                 _game->update(deltaTime, _events);
-                std::cout << _game->isOver() << std::endl;
                 if (_game->isOver())
                     _inMenu = true;
                 for (auto &ent : _game->getEntities())
